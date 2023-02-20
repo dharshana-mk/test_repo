@@ -1,0 +1,218 @@
+--Order of execution
+FROM, including JOINs
+WHERE
+GROUP BY
+HAVING
+WINDOW functions
+SELECT
+ORDER BY
+LIMIT and OFFSET
+
+--Revision
+sql--structured query langauge 
+DML -INSERT,UPDATE,DELETE
+DDL-CREATE,ALTER,DROP
+DQL-SELECT 
+DELETE (only rows)& DROP (Structure and data )
+--
+GROUP BY 
+(MAX,MIN,SUM,AVG,COUNT)
+DIFF WHERE(without) AND HAVING (Aggregate functions)
+WHERE -before group by rows filtered
+Having -after group by 
+
+LIMIT N-FIRST N ROWS 
+
+ORDER BY --ASC/DESC
+
+LIKE --_,%
+
+BETWEEN --RANGE OF NUMBER 
+
+Constraints --restrictions/rules on the table 
+1.not NULL
+2.default
+3.primary KEY (unique/not null)
+4.foreign key 
+5.unique  allows null values,each null is different from another Null
+6.check
+
+
+--Joins   --retrieve data from one or more tables
+n tables --(n-1) join conditions 
+Types of Joins
+1.inner JOIN
+2.outer join 
+   left outer JOIN matched &unmatched rows of left table -- 
+   right outer JOIN
+3.full outer JOIN
+4.self JOIN
+5.cross join 
+
+--CASE statement 
+CASE when then else end 
+
+--Windows Analytical Functions 
+over()--mandatory --
+partition by --grouping  by column 
+order by --ordering of data 
+--Group by 
+
+--Display sum of salary department wise
+
+select sum(salary),department_id 
+from employees
+group by department_id;
+
+---window_function()OVER (PARTITION BY COL1 ORDER BY COL1)
+	--dISPLAY FIRSTNAME,salary,department_id and sum of salary department wise 		
+SELECT first_name,department_id,SALARY,SUM(SALARY)OVER (PARTITION BY department_id)
+FROM employees;
+
+--Display first_name,salary,department_id,average salary department wise
+--min,max,sum,count,avg
+
+--Display first_name,salary,min salary department wise using windows analytical functions 
+--using group by 
+select min(salary),department_id
+from employees
+group by department_id;
+
+--using windows functions
+select first_name,department_id,salary,
+min(salary) over(PARTITION by department_id)as minsal
+from employees;
+--Display first_name,last_name,count of employees department wise  
+
+--Ranking Functions 
+--rank()(skipping of rank)
+--dense_rank
+--row_number 
+--Rank employees based on salary
+select first_name,salary,rank() over (order by salary ) as rnk
+from employees;
+
+--Rank the employees without skipping(dense) 
+select first_name,salary ,dense_rank() over (order by salary desc) as densernk
+from employees;
+
+--using partition 
+--display rank department wise
+
+select first_name,department_id,salary ,dense_rank() over (partition by department_id order by salary desc) as densernk
+from employees;
+
+--Using Titanic table 
+--1.Display first_name,fare,rank without skipping of fare from titanic TABLE
+(Analyse the passengers based on fare )
+select first_name,fare,dense_rank() over (order by fare desc) as dnsrnk
+from titanic;
+
+--2. Display first name,fare,embark town ,sum of fare embark wise using windows 
+--functions
+select first_name,fare,embark_town,sum(fare)over (partition by embark_town) as sumOfFare
+from titanic;
+---
+row_number()number the row
+
+select first_name,last_name,salary,row_number() over (order by salary desc) as rownum
+from employees; 
+
+==========================================================
+ntile--bucket 4 based on salary
+10 rows --11/4
+odd number(extra  row added in first bucket)  
+select first_name,salary,ntile(4) over (order by salary desc ) as nt 
+from employees;
+
+--Analyze the titanic data based on fare into 2 buckets )
+--display first_name,last_name,embark_town,fare 
+
+PL/SQL and SQL(short )
+Procedural langauge
+stored procedure/FUNCTION/trigger  
+
+
+--nth_value  
+5TH person name of person highest salary table employees
+select first_name,department_id,salary,
+nth_value(first_name,5) over (order by salary desc)as fivth
+from employees;
+
+--analyze based on job highest second salary 
+select first_name,job_id,salary,nth_value(first_name,2) over( PARTITION by job_id
+ order by salary desc )as second
+from employees;
+
+
+
+--Aggregate windows functions 
+min,max,sum,count,avg
+--ranking functions 
+rank,dense_rank,row_number
+ntile,nth_value 
+--windows analytical functions (Lead,Lag) 
+--display next dream salary in same department_id
+select first_name,department_id,salary,
+lead(salary) over (PARTITION by department_id order by salary ) as dreamsal
+from employees;
+
+---Lag 
+select first_name,department_id,salary,
+lag(salary,1) over (PARTITION by department_id order by salary ) as dreamsal
+from employees;
+
+
+=======================================
+select * from wine;
+
+-- --------------------------------------------------------------
+# Dataset Used: wine.csv
+-- --------------------------------------------------------------
+
+SELECT * FROM wine;
+
+# Q1. Rank the winery according to the quality of the wine (points).-- Should use dense rank
+
+
+# Q2. Give a dense rank to the wine varities on the basis of the price.
+
+    
+
+
+# Q3. Use aggregate window functions to find the average of points for each row within its partition (country). 
+-- -- Also arrange the result in the descending order by country.
+
+-- --------------------------------------------------------------
+# Dataset Used: wine.csv
+-- --------------------------------------------------------------
+
+SELECT * FROM wine;
+
+# Q1. Rank the winery according to the quality of the wine (points).-- Should use dense rank
+SELECT winery, points,
+	RANK() OVER(ORDER BY points DESC) AS RNK
+    FROM wine;
+
+
+# Q2. Give a dense rank to the wine varities on the basis of the price.
+SELECT variety, price,
+	DENSE_RANK() OVER(ORDER BY price DESC) AS RNK
+    FROM wine;
+    
+
+
+# Q3. Use aggregate window functions to find the average of points for each row within its partition (country). 
+-- -- Also arrange the result in the descending order by country.
+
+SELECT country, province, winery, variety, 
+	AVG(points) OVER(PARTITION BY country) AS AvgPoints_CountryWise
+    FROM wine
+    ORDER BY country DESC;
+	
+	applications 
+	select round(avg(price)) from wine;
+	bank --
+	railway robust 
+	CHRIS --rdbms SQL 
+	select * from employees;
