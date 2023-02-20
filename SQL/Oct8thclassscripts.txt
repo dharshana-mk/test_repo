@@ -1,0 +1,219 @@
+select * from dept;
+
+
+--Count number of employees each departments
+
+select count(employee_id),department_id from employees group by department_id;
+limit 10
+DDL--CREATE,ALTER ,DROP 
+DML-INSERT,UPDATE,DELETE
+DQL-SELECT 
+CONSTRAINTS
+--PRIMARY KEY--not null
+--foreign KEY
+--not NULL
+--CHECK
+--DEFAULT
+--unique --null
+
+Joins---used to combine records from two or more tables in a database
+Types of Joins
+1.inner join--join 
+1 column value same in both the table 
+select * from employees;
+3 tables --2 join conditions
+ 
+-- Write a query to display first_name,department name from employees,departments TABLE
+select first_name,department_name from employees inner join departments 
+on employees.department_id=departments.department_id
+where employees.department_id=10;
+
+-- Write a query to display first_name,department_id,department name from employees,departments 
+--TABLE  where department_id=10
+select first_name,employees.department_id,department_name
+from employees join departments
+on employees.department_id=departments.department_id;
+
+--Write a sql query to find those employees whose first_name contains letter 'b'.
+--Return first_name,department_id,department_name
+
+
+--1.Write a query to find first_name,last_name,department_id,department_name 
+--where lastname is 'Taylor'
+--2.Display first_name,last_name,departmentname for all employees in department id =8
+--order by last name 
+
+Order of execution
+1.FROM 
+
+select first_name,e.department_id,department_name
+from employees e join departments d
+on e.department_id=d.department_id;
+
+(n-1) join conditions 
+--Write a query to display first and last name,department name,city for each employees
+select first_name,last_name,department_name,city 
+from employees join departments on employees.department_id=departments.department_id
+join locations on departments.location_id=locations.location_id;
+
+-- Display first_name,lastname,salary,department_name,city 
+--of all employees located in 'London'
+Select first_name, last_name, salary, department_name, city from employees e JOIN departments d on e.department_id = d.department_id
+JOIN locations l on d.location_id = l.location_id where city = 'London';
+
+select <>
+from<>
+where<>
+group by <>
+having <>
+order by <>
+limit <>
+
+
+--display average salary along  departmentname
+select avg(salary),department_name
+from employees join departments
+on employees.department_id=departments.department_id
+group by department_name;
+
+
+
+select max(salary) from employees;
+--max salary department wise
+select max(Salary),department_id from employees group by department_id;
+
+=================================================================
+Types of Joins
+1.Inner Join 
+2.Outer join 
+ a.Left outer JOIN
+ b.Right outer JOIN
+3.Self JOIN
+4.Cross join 
+
+2.LEFT OUTER JOIN --left join 
+display matching rows and unmatched rows from left side  table 
+===================================================
+--Display ename,dname from emp,dept using inner join 
+SELECT ename, dname
+FROM emp e
+JOIN dept d ON e.deptid = d.deptid;
+
+left join --matching +unmatched rows LEFT table
+--display all employees who are assigned and not assigned departments 
+select ename,dname
+from emp LEFT join dept ON EMP.deptid =DEPT.DEPTID; 
+================================================================
+SELECT * FROM EMP;
+SELECT * FROM DEPT;
+
+--DISPLAY all deptid,ename   with or without employees  from both the tables 
+select  from dept left join emp on emp.deptid=dept.deptid
+
+SQLITE --inner join,left join 
+right join 
+FULL OUTER JOIN ---unmatched and matched rows left,right 
+
+
+--Cross join --doesnt meaning full result 
+--testing 3 lakh rows 
+--10 lakh rows 
+select ename,dname from emp cross join dept;
+-self join 
+select * from emp;
+
+Gray's manager's name 
+--SELF JOIN --joining itself 
+--Display all ename with their manager name 
+select e.ename,m.ename as 'Manager name'
+from emp e join emp m
+on e.mgr_id=m.empid
+where e.ename ='Gray';
+
+--Joins
+Inner JOIN
+left outer JOIN
+right outer join 
+full outer join 
+cross join 
+self join 
+
+=============================================================
+Case statement 
+
+if <cond> then <display >
+else <cond> then <display>
+else display 
+
+select * from emp;
+case statment --CASE WHEN THEN ELSE END 
+--------------------------------
+if salary > 20000 then display as 'High salary'
+else if salary between 15000 and 2000 then 'avg salary'
+else display 'basic salary'
+SELECT ename,sal,case when sal >20000 then 'High Sal'
+when sal between 15000 and 20000 then 'Avg sal'
+else 'Basic sal' end   
+from emp;
+==Load HR.db 
+--1.use employees table
+Display first_name,salary,
+if salary > 20000 then display as 'High salary'
+else if salary between 15000 and 2000 then 'avg salary'
+else display 'basic salary' as 'Salbifur' 
+
+--case when then else end 
+--2. Use titanic TABLE
+display first_name,fare, if fare >60000 then 'High Fare'
+if fare is between 30000 and 60000 then 'Average Fare'
+else 'Basic Fare' as 'FareStats' 
+
+--3.--2. Use titanic TABLE
+display first_name,age , if age >50 then 'Senior'
+if age  is between 30 and 50 then 'Average Age'
+else 'Adult' as 'AgeStats'
+
+
+SELECT first_name,salary,CASE WHEN salary >20000 THEN 'High Sal'
+WHEN salary BETWEEN 15000 and 20000 THEN 'Avg Sal'
+ELSE 'Basic sal' end as 'Salbifurcation'
+FROM employees
+order by salary;
+
+
+
+
+CREATE TABLE `sandwich` (
+  `sid` varchar(10) primary key,
+  `name` varchar(30) DEFAULT NULL,
+  `filling` varchar(30) DEFAULT NULL,
+  `bread` varchar(30) DEFAULT NULL,
+  `price` int DEFAULT NULL) ;
+  
+insert into sandwich values('s1',	'san-chicken',	'chicken',	'White',	50);
+insert into sandwich values('s2',	'san-chicken',	'chicken',	'Brown',	55);
+insert into sandwich values('s3',	'san-veggie',	'mixed veg',	'Brown',	50);
+insert into sandwich values('s4',	'san-veggie',	'mixed veg',	'multi grain',	55);
+insert into sandwich values('s5',	'san-aloo tikki',	'potato',	'Rye',	25);
+insert into sandwich values('s6','san-mexican veg', 'veg  mayonnaise','White',45);
+insert into sandwich values('s7',	'san-mixed cheese',	'cheese veg',	'White',	60);
+
+select * from sandwich;
+CREATE TABLE `sandwichorder` (
+  `sid` varchar(10) references sandwich(sid),
+  qty integer ) ;
+  
+  insert into sandwichorder values('s1',2),('s2',3),('s3',4);
+  insert into sandwichorder values(null,1);
+Joins Exercises
+  --1. Display sandwich name and qty ordered
+   
+  --2.Display sandwich name which were ordered and not ordered
+  --3. Display all the  orders with or without sandwich names
+   
+ Exercises on sandwich TABLE
+ 1. Display the details of sandwiches where price ranges from 20 to 50. 
+2. Display the details of sandwiches of brown bread.
+
+
+=========================================================================
